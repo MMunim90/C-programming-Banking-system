@@ -1,4 +1,10 @@
 #include<stdio.h>
+
+void create_account();
+void deposit_money();
+void withdraw_money();
+void check_balance();
+
 int main()
 {
     while (1)
@@ -18,12 +24,16 @@ int main()
         switch (choice)
         {
         case 1:
+            create_account();
             break;
         case 2:
+            deposit_money();
             break;
         case 3:
+            withdraw_money();
             break;
         case 4:
+            check_balance();
             break;
         case 5:
             printf("\nAre you sure you want to close the program? 1. Yes  2. No: ");
@@ -41,6 +51,21 @@ int main()
             break;
         }
     }
-    
-    return 0;
+}
+
+
+void create_account(){
+    printf("\nCreating Account");
+}
+
+void deposit_money(){
+    printf("\nDeposit Money");
+}
+
+void withdraw_money(){
+    printf("\nWithdraw Money");
+}
+
+void check_balance(){
+    printf("\nCheck Balance");
 }
