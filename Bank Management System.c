@@ -64,16 +64,28 @@ int main()
 
 void create_account(){
     Account acc;
+    FILE *file = fopen("Account.dat", "ab+");
+    if(file == NULL){
+        printf("\nUnable to open file!!!");
+        return;
+    }
+
+    getchar();
+
     printf("\nEnter your name: ");
     fgets(acc.name, sizeof(acc.name), stdin);
 
     int index = strcspn(acc.name, "\n");
-    acc.name[index] = "\0";
+    acc.name[index] = '\0';
 
     printf("\nEnter your account number: ");
     scanf("%d", &acc.acc_no);
     
     acc.balance = 0;
+
+    fwrite(&acc, sizeof(acc), 1, file);
+    fclose(file);
+    printf("\nAccount created successfully!");
 }
 
 void deposit_money(){
