@@ -83,7 +83,7 @@ void create_account()
     acc.name[index] = '\0';
 
     int acc_n;
-    printf("\nEnter your account number: ");
+    printf("Enter your account number: ");
     scanf("%d", &acc_n);
 
     while (fread(&acc, sizeof(acc), 1, file))
@@ -116,11 +116,26 @@ void deposit_money()
 
     int acc_no;
     float deposit_money;
+    Account acc_r;
     printf("\nEnter your account number: ");
     scanf("%d", &acc_no);
-    printf("\nEnter amount to deposit: ");
+    printf("Enter amount to deposit: ");
     scanf("%f", &deposit_money);
     
+    while (fread(&acc_r, sizeof(acc_r), 1, file))
+    {
+        if(acc_r.acc_no == acc_no){
+            acc_r.balance += deposit_money;
+            fseek(file, -sizeof(acc_r), SEEK_CUR);
+            fwrite(&acc_r, sizeof(acc_r), 1, file);
+            fclose(file);
+            printf("\nSuccessfully deposited %.2f Taka. New balance is %.2f Taka.", deposit_money, acc_r.balance);
+            return;
+        }
+    }
+    
+    fclose(file);
+    printf("\nMoney could not be deposited as the Account No: %d was not found in records.\n", acc_no);
 }
 
 void withdraw_money()
@@ -151,6 +166,7 @@ void check_balance()
             return;
         }
     }
+
     fclose(file);
     printf("\nAccount No: %d was not found.\n", acc_no);
 }
