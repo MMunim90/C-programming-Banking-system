@@ -107,7 +107,20 @@ void create_account()
 
 void deposit_money()
 {
-    printf("\nDeposit Money");
+    FILE *file = fopen(ACCOUNT_FILE, "rb+");
+    if (file == NULL)
+    {
+        printf("\nUnable to open file!!!");
+        return;
+    }
+
+    int acc_no;
+    float deposit_money;
+    printf("\nEnter your account number: ");
+    scanf("%d", &acc_no);
+    printf("\nEnter amount to deposit: ");
+    scanf("%f", &deposit_money);
+    
 }
 
 void withdraw_money()
