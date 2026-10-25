@@ -1,18 +1,18 @@
-#include<stdio.h>
-#include<string.h>
+#include <stdio.h>
+#include <string.h>
 
 void create_account();
 void deposit_money();
 void withdraw_money();
 void check_balance();
 
-const char* ACCOUNT_FILE = "Account.dat";
-typedef struct {
+const char *ACCOUNT_FILE = "Account.dat";
+typedef struct
+{
     char name[50];
     int acc_no;
     float balance;
 } Account;
-
 
 int main()
 {
@@ -21,7 +21,7 @@ int main()
         int choice;
         int close;
 
-        printf("\n\n*** Bank Management System ***");
+        printf("\n\n*** Bank Management System ***\n");
         printf("\n1. Create Account");
         printf("\n2. Deposit Money");
         printf("\n3. Withdraw Money");
@@ -47,11 +47,13 @@ int main()
         case 5:
             printf("\nAre you sure you want to close the program? 1. Yes  2. No: ");
             scanf("%d", &close);
-            if(close == 1){
+            if (close == 1)
+            {
                 printf("\nClosing the Bank, Thanks for your visit.\n");
                 return 0;
             }
-            else{
+            else
+            {
                 printf("\nPlease wait... Returning to the options\n");
                 break;
             }
@@ -62,11 +64,12 @@ int main()
     }
 }
 
-
-void create_account(){
+void create_account()
+{
     Account acc;
     FILE *file = fopen(ACCOUNT_FILE, "ab+");
-    if(file == NULL){
+    if (file == NULL)
+    {
         printf("\nUnable to open file!!!");
         return;
     }
@@ -79,9 +82,22 @@ void create_account(){
     int index = strcspn(acc.name, "\n");
     acc.name[index] = '\0';
 
+    int acc_n;
     printf("\nEnter your account number: ");
-    scanf("%d", &acc.acc_no);
-    
+    scanf("%d", &acc_n);
+
+    while (fread(&acc, sizeof(acc), 1, file))
+    {
+        if (acc.acc_no == acc_n)
+        {
+            printf("\nThis account number is already available. Try with another one.");
+            fclose(file);
+            return;
+        }
+    }
+
+    acc.acc_no = acc_n;
+
     acc.balance = 0;
 
     fwrite(&acc, sizeof(acc), 1, file);
@@ -89,17 +105,21 @@ void create_account(){
     printf("\nAccount created successfully!");
 }
 
-void deposit_money(){
+void deposit_money()
+{
     printf("\nDeposit Money");
 }
 
-void withdraw_money(){
+void withdraw_money()
+{
     printf("\nWithdraw Money");
 }
 
-void check_balance(){
+void check_balance()
+{
     FILE *file = fopen(ACCOUNT_FILE, "rb");
-    if(file == NULL){
+    if (file == NULL)
+    {
         printf("\nUnable to open file!!!");
         return;
     }
@@ -111,7 +131,8 @@ void check_balance(){
 
     while (fread(&acc_read, sizeof(acc_read), 1, file))
     {
-        if(acc_read.acc_no == acc_no){
+        if (acc_read.acc_no == acc_no)
+        {
             printf("\nYour current balance is %.2f Taka", acc_read.balance);
             fclose(file);
             return;
