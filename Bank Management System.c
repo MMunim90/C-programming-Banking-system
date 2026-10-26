@@ -62,6 +62,7 @@ int main()
             break;
         }
     }
+    
 }
 
 void create_account()
@@ -121,10 +122,11 @@ void deposit_money()
     scanf("%d", &acc_no);
     printf("Enter amount to deposit: ");
     scanf("%f", &deposit_money);
-    
+
     while (fread(&acc_r, sizeof(acc_r), 1, file))
     {
-        if(acc_r.acc_no == acc_no){
+        if (acc_r.acc_no == acc_no)
+        {
             acc_r.balance += deposit_money;
             fseek(file, -sizeof(acc_r), SEEK_CUR);
             fwrite(&acc_r, sizeof(acc_r), 1, file);
@@ -133,14 +135,50 @@ void deposit_money()
             return;
         }
     }
-    
+
     fclose(file);
     printf("\nMoney could not be deposited as the Account No: %d was not found in records.\n", acc_no);
 }
 
 void withdraw_money()
 {
-    printf("\nWithdraw Money");
+    FILE *file = fopen(ACCOUNT_FILE, "rb+");
+    if (file == NULL)
+    {
+        printf("\nUnable to open file!!!");
+        return;
+    }
+
+    int acc_no;
+    float withdraw_money;
+    Account acc_r;
+    printf("\nEnter your account number: ");
+    scanf("%d", &acc_no);
+    printf("Enter the amount you want to withdraw: ");
+    scanf("%f", &withdraw_money);
+
+    while (fread(&acc_r, sizeof(acc_r), 1, file))
+    {
+        if (acc_r.acc_no == acc_no)
+        {
+            if (acc_r.balance >= withdraw_money)
+            {
+                acc_r.balance -= withdraw_money;
+                fseek(file, -sizeof(acc_r), SEEK_CUR);
+                fwrite(&acc_r, sizeof(acc_r), 1, file);
+                printf("\nSuccessfully withdrawn %.2f Taka. Remaining balance is %.2f Taka.", withdraw_money, acc_r.balance);
+            }
+            else
+            {
+                printf("\nInsufficient balance!");
+            }
+            fclose(file);
+            return;
+        }
+    }
+
+    fclose(file);
+    printf("\nMoney could not be withdrawn as the Account No: %d was not found in records.\n", acc_no);
 }
 
 void check_balance()
